@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace GerenciadorDeTarefas.Data.Repositories.Interfaces
+namespace TaskManager.Data.Repositories.Interfaces
 {
     public interface IRepository<T> where T : class
     {

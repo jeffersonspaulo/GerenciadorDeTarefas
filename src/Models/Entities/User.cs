@@ -1,6 +1,6 @@
-﻿namespace GerenciadorDeTarefas.Models.Entities
+﻿namespace TaskManager.Models.Entities
 {
-    public class Usuario
+    public class User
     {
         public int Id { get; set; }
         public string Nome { get; set; }

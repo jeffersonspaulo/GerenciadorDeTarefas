@@ -1,13 +1,13 @@
-﻿using GerenciadorDeTarefas.Models.Entities;
+﻿using TaskManager.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace GerenciadorDeTarefas.API.Data
+namespace TaskManager.API.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Tarefa> Tarefas { get; set; }
-        public DbSet<Projeto> Projetos { get; set; }
+        public DbSet<User> Usuarios { get; set; }
+        public DbSet<TaskManager.Models.Entities.Task> Tarefas { get; set; }
+        public DbSet<Project> Projetos { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -15,12 +15,12 @@ namespace GerenciadorDeTarefas.API.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Tarefa>()
+            modelBuilder.Entity<TaskManager.Models.Entities.Task>()
                 .HasOne(t => t.Projeto)
                 .WithMany(p => p.Tarefas)
                 .HasForeignKey(t => t.ProjetoId);
 
-            modelBuilder.Entity<Projeto>()
+            modelBuilder.Entity<Project>()
                 .HasMany(p => p.Tarefas)
                 .WithOne(t => t.Projeto)
                 .HasForeignKey(t => t.ProjetoId);

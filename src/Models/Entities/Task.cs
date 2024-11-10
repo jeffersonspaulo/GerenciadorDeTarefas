@@ -1,18 +1,18 @@
-﻿using GerenciadorDeTarefas.API.Models.Enums;
+﻿using TaskManager.API.Models.Enums;
 using Newtonsoft.Json;
 
-namespace GerenciadorDeTarefas.Models.Entities
+namespace TaskManager.Models.Entities
 {
-    public class Tarefa
+    public class Task
     {
         public int Id { get; set; }
         public int ProjetoId { get; set; }
         public string Titulo { get; set; }
         public string Descricao { get; set; }
         public DateTime DataVencimento { get; set; }
-        public TarefaStatus Status { get; set; }
+        public API.Models.Enums.TaskStatus Status { get; set; }
 
         [JsonIgnore]
-        public Projeto Projeto { get; set; }
+        public Project Projeto { get; set; }
     }
 }

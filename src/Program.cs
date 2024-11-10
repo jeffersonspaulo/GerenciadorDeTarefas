@@ -1,5 +1,5 @@
-using GerenciadorDeTarefas.API.Data;
-using GerenciadorDeTarefas.Configurations;
+using TaskManager.API.Data;
+using TaskManager.API.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

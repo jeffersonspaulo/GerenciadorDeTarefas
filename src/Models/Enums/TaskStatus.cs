@@ -1,6 +1,6 @@
-﻿namespace GerenciadorDeTarefas.API.Models.Enums
+﻿namespace TaskManager.API.Models.Enums
 {
-    public enum TarefaStatus
+    public enum TaskStatus
     {
         Pendente = 1,
         EmAndamento = 2,
