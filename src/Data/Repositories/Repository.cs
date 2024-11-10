@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using TaskManager.Data.Repositories.Interfaces;
+using GerenciadorDeTarefas.Data.Repositories.Interfaces;
 
-namespace TaskManager.API.Data.Repositories
+namespace GerenciadorDeTarefas.API.Data.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {

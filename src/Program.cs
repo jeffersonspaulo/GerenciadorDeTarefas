@@ -1,6 +1,7 @@
-using TaskManager.API.Data;
-using TaskManager.API.Configurations;
+using GerenciadorDeTarefas.API.Data;
+using GerenciadorDeTarefas.API.Configurations;
 using Microsoft.EntityFrameworkCore;
+using GerenciadorDeTarefas.API.Mappings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.RegisterServices(builder.Configuration);
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

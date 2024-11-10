@@ -1,18 +1,18 @@
-using TaskManager.API.Models.Dtos;
-using TaskManager.API.Services.Interfaces;
-using TaskManager.Models.Entities;
+using GerenciadorDeTarefas.API.Models.Dtos;
+using GerenciadorDeTarefas.API.Services.Interfaces;
+using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace TaskManager.API.Controllers
+namespace GerenciadorDeTarefas.API.Controllers
 {
     [ApiController]
     [Route("projeto")]
-    public class ProjectController : ControllerBase
+    public class ProjetoController : ControllerBase
     {
-        private readonly ILogger<ProjectController> _logger;
-        private readonly IProjectService _projetoService;
+        private readonly ILogger<ProjetoController> _logger;
+        private readonly IProjetoService _projetoService;
 
-        public ProjectController(ILogger<ProjectController> logger, IProjectService projetoService)
+        public ProjetoController(ILogger<ProjetoController> logger, IProjetoService projetoService)
         {
             _logger = logger;
             _projetoService = projetoService;
@@ -67,7 +67,7 @@ namespace TaskManager.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Project>> Create([FromBody] ProjectDto projetoDto)
+        public async Task<ActionResult<Projeto>> Create([FromBody] ProjetoDto projetoDto)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace TaskManager.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ProjectDto projetoDto)
+        public async Task<IActionResult> Update(int id, [FromBody] ProjetoDto projetoDto)
         {
             try
             {

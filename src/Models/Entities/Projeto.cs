@@ -1,12 +1,12 @@
-﻿namespace TaskManager.Models.Entities
+﻿namespace GerenciadorDeTarefas.API.Models.Entities
 {
-    public class Project
+    public class Projeto
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }
         public DateTime DataCriacao { get; set; }
 
-        public List<Task> Tarefas { get; set; }
+        public List<Tarefa> Tarefas { get; set; }
     }
 }

@@ -1,17 +1,20 @@
-﻿using TaskManager.Data.Repositories.Interfaces;
+﻿using GerenciadorDeTarefas.Data.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using TaskManager.API.Data;
-using TaskManager.API.Data.Repositories;
+using GerenciadorDeTarefas.API.Data;
+using GerenciadorDeTarefas.API.Data.Repositories;
+using GerenciadorDeTarefas.API.Services.Interfaces;
+using GerenciadorDeTarefas.API.Services;
 
-namespace TaskManager.API.Configurations
+namespace GerenciadorDeTarefas.API.Configurations
 {
     public static class ApplicationConfig
     {
         public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IProjetoService, ProjetoService>();
+            services.AddScoped<ITarefaService, TarefaService>();
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

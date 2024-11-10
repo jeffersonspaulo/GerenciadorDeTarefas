@@ -1,29 +1,71 @@
-﻿using TaskManager.Models.Entities;
+﻿using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace TaskManager.API.Data
+namespace GerenciadorDeTarefas.API.Data
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<User> Usuarios { get; set; }
-        public DbSet<TaskManager.Models.Entities.Task> Tarefas { get; set; }
-        public DbSet<Project> Projetos { get; set; }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
+        }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        public DbSet<Projeto> Projetos { get; set; }
+        public DbSet<Tarefa> Tarefas { get; set; }
+        public DbSet<TarefaStatus> TarefasStatus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<TaskManager.Models.Entities.Task>()
-                .HasOne(t => t.Projeto)
-                .WithMany(p => p.Tarefas)
-                .HasForeignKey(t => t.ProjetoId);
+            modelBuilder.Entity<Projeto>()
+                .HasKey(p => p.Id);
 
-            modelBuilder.Entity<Project>()
+            modelBuilder.Entity<Projeto>()
+                .Property(p => p.Nome)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Projeto>()
+                .Property(p => p.Descricao)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Projeto>()
                 .HasMany(p => p.Tarefas)
                 .WithOne(t => t.Projeto)
-                .HasForeignKey(t => t.ProjetoId);
+                .HasForeignKey(t => t.ProjetoId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Tarefa>()
+                .HasKey(t => t.Id);
+
+            modelBuilder.Entity<Tarefa>()
+                .Property(t => t.Titulo)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Tarefa>()
+                .Property(t => t.Descricao)
+                .HasMaxLength(500);
+
+            modelBuilder.Entity<Tarefa>()
+                .HasOne(t => t.TarefaStatus)
+                .WithMany()
+                .HasForeignKey(t => t.TarefaStatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TarefaStatus>()
+                .HasKey(ts => ts.Id);
+
+            modelBuilder.Entity<TarefaStatus>()
+                .Property(ts => ts.Nome)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            modelBuilder.Entity<TarefaStatus>().HasData(
+                new TarefaStatus { Id = 1, Nome = "Pending" },
+                new TarefaStatus { Id = 2, Nome = "InProgress" },
+                new TarefaStatus { Id = 3, Nome = "Completed" }
+            );
         }
     }
 }
