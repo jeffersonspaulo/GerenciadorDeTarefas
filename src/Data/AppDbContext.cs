@@ -10,8 +10,7 @@ namespace GerenciadorDeTarefas.API.Data
         }
 
         public DbSet<Projeto> Projetos { get; set; }
-        public DbSet<Tarefa> Tarefas { get; set; }
-        public DbSet<TarefaStatus> TarefasStatus { get; set; }
+        public DbSet<Tarefa> Tarefas { get; set; } 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,26 +45,6 @@ namespace GerenciadorDeTarefas.API.Data
             modelBuilder.Entity<Tarefa>()
                 .Property(t => t.Descricao)
                 .HasMaxLength(500);
-
-            modelBuilder.Entity<Tarefa>()
-                .HasOne(t => t.TarefaStatus)
-                .WithMany()
-                .HasForeignKey(t => t.TarefaStatusId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<TarefaStatus>()
-                .HasKey(ts => ts.Id);
-
-            modelBuilder.Entity<TarefaStatus>()
-                .Property(ts => ts.Nome)
-                .IsRequired()
-                .HasMaxLength(50);
-
-            modelBuilder.Entity<TarefaStatus>().HasData(
-                new TarefaStatus { Id = 1, Nome = "Pending" },
-                new TarefaStatus { Id = 2, Nome = "InProgress" },
-                new TarefaStatus { Id = 3, Nome = "Completed" }
-            );
         }
     }
 }

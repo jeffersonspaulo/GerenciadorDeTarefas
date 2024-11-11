@@ -23,14 +23,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //var createdOrder = await _orderService.CreateAsync(orderDto);
+                var projetos = await _projetoService.GetAllAsync();
 
-                return Ok();
+                return Ok(projetos);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request.", Description = ex.Message });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
 
@@ -39,14 +39,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //var createdOrder = await _orderService.CreateAsync(orderDto);
+                var projeto = await _projetoService.GetByIdAsync(id);
 
-                return Ok();
+                return Ok(projeto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request.", Description = ex.Message });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
 
@@ -55,14 +55,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //var createdOrder = await _orderService.CreateAsync(orderDto);
+                var projetos = await _projetoService.GetByUsuarioAsync(usuarioId);
 
-                return Ok();
+                return Ok(projetos);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request.", Description = ex.Message });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
 
@@ -71,14 +71,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //var createdOrder = await _orderService.CreateAsync(orderDto);
+                var projeto = await _projetoService.InsertAsync(projetoDto);
 
-                return Ok();
+                return Ok(projeto);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request.", Description = ex.Message });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
 
@@ -87,14 +87,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //await _orderService.UpdateAsync(id, orderDto);
+                await _projetoService.UpdateAsync(id, projetoDto);
 
                 return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request.", Description = ex.Message });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
 
@@ -103,14 +103,14 @@ namespace GerenciadorDeTarefas.API.Controllers
         {
             try
             {
-                //await _orderService.DeleteAsync(id);
+                await _projetoService.DeleteAsync(id);
 
                 return Ok();
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return BadRequest(new { ErrorMessage = "An error occurred while processing the request." });
+                return BadRequest(new { Error = "Ocorreu um erro durante a requisição.", Descricao = ex.Message });
             }
         }
     }

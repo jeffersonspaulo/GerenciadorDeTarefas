@@ -4,6 +4,7 @@ using GerenciadorDeTarefas.API.Data;
 using GerenciadorDeTarefas.API.Data.Repositories;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Services;
+using GerenciadorDeTarefas.API.Data.Repositories.Interfaces;
 
 namespace GerenciadorDeTarefas.API.Configurations
 {
@@ -15,6 +16,8 @@ namespace GerenciadorDeTarefas.API.Configurations
 
             services.AddScoped<IProjetoService, ProjetoService>();
             services.AddScoped<ITarefaService, TarefaService>();
+            services.AddScoped<IProjetoRepository, ProjetoRepository>();
+            services.AddScoped<ITarefaRepository, TarefaRepository>();
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
