@@ -2,6 +2,8 @@ using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using GerenciadorDeTarefas.API.Models.Enums;
+using GerenciadorDeTarefas.Models.Entities;
 
 namespace GerenciadorDeTarefas.API.Controllers
 {
@@ -9,89 +11,71 @@ namespace GerenciadorDeTarefas.API.Controllers
     [Route("relatorio")]
     public class RelatorioController : ControllerBase
     {
-        private readonly IProjetoService _projetoService;
+        private readonly IRelatorioService _relatorioService;
 
-        public RelatorioController(IProjetoService projetoService)
+        public RelatorioController(IRelatorioService relatorioService)
         {
-            _projetoService = projetoService;
+            _relatorioService = relatorioService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [HttpGet("media-tarefas-concluidas")]
+        public async Task<ActionResult<IEnumerable<UsuarioMediaDto>>> MediaTarefasConcluidasAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
-            var result = await _projetoService.GetAllAsync();
+            var resultado = await _relatorioService.CalcularMediaTarefasConcluidasPeriodoAsync(dataInicio, dataFim);
 
-            if (!result.IsSuccess)
+            if (resultado.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return Ok(resultado.Data);
             }
-
-            return Ok(result.Data);
+            return BadRequest(resultado.ErrorMessage);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("tarefas-concluidas-por-projeto")]
+        public async Task<ActionResult<IEnumerable<ProjetoQuantidadeDto>>> TarefasConcluidasPorProjetoAsync(RelatorioTarefasPorProjetoDto relatorioDto)
         {
-            var result = await _projetoService.GetByIdAsync(id);
+            var resultado = await _relatorioService.ObterTarefasConcluidasPorProjetoAsync(relatorioDto);
 
-            if (!result.IsSuccess)
+            if (resultado.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return Ok(resultado.Data);
             }
-
-            return Ok(result.Data);
+            return BadRequest(resultado.ErrorMessage);
         }
 
-        [HttpGet("usuario/{usuarioId}")]
-        public async Task<IActionResult> GetByUsuario(int usuarioId)
+        [HttpGet("usuarios-mais-produtivos")]
+        public async Task<ActionResult<IEnumerable<Usuario>>> UsuariosProdutivosPorPeriodoAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
-            var result = await _projetoService.GetByUsuarioAsync(usuarioId);
+            var resultado = await _relatorioService.ObterUsuariosMaisProdutivosPorPeriodoAsync(dataInicio, dataFim);
 
-            if (!result.IsSuccess)
+            if (resultado.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return Ok(resultado.Data);
             }
-
-            return Ok(result.Data);
+            return BadRequest(resultado.ErrorMessage);
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Projeto>> Create([FromBody] ProjetoDto projetoDto)
+        [HttpGet("media-tarefas-criadas-dia")]
+        public async Task<ActionResult<double>> MediaTarefasCriadasPorDiaAsync()
         {
-            var result = await _projetoService.InsertAsync(projetoDto);
+            var resultado = await _relatorioService.CalcularMediaTarefasCriadasPorDiaAsync();
 
-            if (!result.IsSuccess)
+            if (resultado.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return Ok(resultado.Data);
             }
-
-            return Ok(result.Data);
+            return BadRequest(resultado.ErrorMessage);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ProjetoDto projetoDto)
+        [HttpGet("projetos-atrasados")]
+        public async Task<ActionResult<IEnumerable<Projeto>>> ProjetosAtrasadosAsync()
         {
-            var result = await _projetoService.UpdateAsync(id, projetoDto);
+            var resultado = await _relatorioService.ObterProjetosAtrasadosAsync();
 
-            if (!result.IsSuccess)
+            if (resultado.IsSuccess)
             {
-                return BadRequest(new { Error = result.ErrorMessage });
+                return Ok(resultado.Data);
             }
-
-            return Ok(result.IsSuccess);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var result = await _projetoService.DeleteAsync(id);
-
-            if (!result.IsSuccess)
-            {
-                return BadRequest(new { Error = result.ErrorMessage });
-            }
-
-            return Ok(result.IsSuccess);
+            return BadRequest(resultado.ErrorMessage);
         }
     }
 }

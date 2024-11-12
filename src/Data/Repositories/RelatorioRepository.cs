@@ -16,7 +16,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             _context = context;
         }
 
-        public async Task<List<UsuarioMediaDto>> CalcularMediaTarefasConcluidasPeriodoAsync(TarefaStatus status, DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<UsuarioMediaDto>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             var tarefasComHistorico = await _context.Tarefas
                 .Where(t => t.TarefaHistoricos.Any(h => h.TarefaStatus == TarefaStatus.Concluida &&
@@ -46,12 +46,12 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             return mediasPorUsuario;
         }
 
-        public async Task<List<ProjetoQuantidadeDto>> ObterTarefasConcluidasPorProjetoAsync(int projetoId, DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<ProjetoQuantidadeDto>> ObterTarefasConcluidasPorProjetoAsync(RelatorioTarefasPorProjetoDto relatorioDto)
         {
             var resultados = await _context.Tarefas
-                .Where(t => t.ProjetoId == projetoId &&
+                .Where(t => t.ProjetoId == relatorioDto.ProjetoId &&
                             t.TarefaHistoricos.Any(h => h.TarefaStatus == TarefaStatus.Concluida &&
-                                                         h.DataInclusao >= dataInicio && h.DataInclusao <= dataFim))
+                                                         h.DataInclusao >= relatorioDto.DataInicio && h.DataInclusao <= relatorioDto.DataFim))
                 .GroupBy(t => t.ProjetoId)
                 .Select(g => new ProjetoQuantidadeDto
                 {
@@ -63,7 +63,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             return resultados;
         }
 
-        public async Task<List<Usuario>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<Usuario>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             return await _context.TarefasHistorico
                 .Where(h => h.TarefaStatus == TarefaStatus.Concluida &&
@@ -84,7 +84,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             return totalTarefas / diasTotais;
         }
 
-        public async Task<List<Projeto>> ObterProjetosAtrasadosAsync()
+        public async Task<IEnumerable<Projeto>> ObterProjetosAtrasadosAsync()
         {
             return await _context.Projetos
                 .Where(p => p.Tarefas.Any(t => t.DataVencimento < DateTime.Now && t.TarefaStatus != TarefaStatus.Concluida))

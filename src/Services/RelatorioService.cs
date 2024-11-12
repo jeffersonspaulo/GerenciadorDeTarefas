@@ -1,8 +1,6 @@
-﻿using AutoMapper;
-using GerenciadorDeTarefas.API.Data.Repositories.Interfaces;
+﻿using GerenciadorDeTarefas.API.Data.Repositories.Interfaces;
 using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Models.Entities;
-using GerenciadorDeTarefas.API.Models.Enums;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Utils;
 using GerenciadorDeTarefas.Models.Entities;
@@ -22,11 +20,11 @@ namespace GerenciadorDeTarefas.API.Services
             _validationService = validationService;
         }
 
-        public async Task<Result<IEnumerable<UsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(TarefaStatus status, DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<UsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             try
             {
-                var resultado = await _relatorioRepository.CalcularMediaTarefasConcluidasPeriodoAsync(status, dataInicio, dataFim);
+                var resultado = await _relatorioRepository.CalcularMediaTarefasConcluidasPeriodoAsync(dataInicio, dataFim);
 
                 return Result<IEnumerable<UsuarioMediaDto>>.Success(resultado);
             }
@@ -37,11 +35,11 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result<IEnumerable<ProjetoQuantidadeDto>>> ObterTarefasConcluidasPorProjetoAsync(int projetoId, DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<ProjetoQuantidadeDto>>> ObterTarefasConcluidasPorProjetoAsync(RelatorioTarefasPorProjetoDto relatorioDto)
         {
             try
             {
-                var resultado = await _relatorioRepository.ObterTarefasConcluidasPorProjetoAsync(projetoId, dataInicio, dataFim);
+                var resultado = await _relatorioRepository.ObterTarefasConcluidasPorProjetoAsync(relatorioDto);
 
                 return Result<IEnumerable<ProjetoQuantidadeDto>>.Success(resultado);
             }

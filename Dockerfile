@@ -1,25 +1,26 @@
-# Use a imagem base do .NET SDK
+# Etapa base
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# Use a imagem base do .NET SDK
+# Etapa de build
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /app
-COPY ["KDSOrderManagement.csproj", "KDSOrderManagement/"]
-RUN dotnet restore "KDSOrderManagement/KDSOrderManagement.csproj"
+WORKDIR /src
+COPY ["src/GerenciadorDeTarefas.API.csproj", "src/"]
+RUN dotnet restore "src/GerenciadorDeTarefas.API.csproj"
 
-WORKDIR "/src/KDSOrderManagement"
+WORKDIR /src
 COPY . .
+RUN dotnet build "src/GerenciadorDeTarefas.API.csproj" -c Release -o /app/build
 
-RUN dotnet build "KDSOrderManagement.csproj" -c Release -o /app/build
-
+# Etapa de publicação
 FROM build AS publish
-RUN dotnet publish "KDSOrderManagement.csproj" -c Release -o /app/publish
+RUN dotnet publish "src/GerenciadorDeTarefas.API.csproj" -c Release -o /app/publish
 
+# Etapa final
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY appsettings.Docker.json .
+COPY appsettings.Docker.json .  # Se houver configuração específica para o Docker
 ENV ASPNETCORE_ENVIRONMENT=Docker
-ENTRYPOINT ["dotnet", "KDSOrderManagement.dll"]
+ENTRYPOINT ["dotnet", "GerenciadorDeTarefas.API.dll"]

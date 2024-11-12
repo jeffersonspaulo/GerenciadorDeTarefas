@@ -30,6 +30,7 @@ namespace GerenciadorDeTarefas.API.Configurations
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
         }
     }
 }
