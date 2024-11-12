@@ -19,5 +19,25 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
                 .Where(item => item.ProjetoId == projetoId)
                 .ToListAsync();
         }
+
+        public async Task AddHistorico(Tarefa tarefa, int usuarioId, string comentario)
+        {
+            var tarefaHistorico = new TarefaHistorico
+            {
+                TarefaId = tarefa.Id,
+                ProjetoId = tarefa.ProjetoId,
+                Titulo = tarefa.Titulo,
+                Descricao = tarefa.Descricao,
+                DataVencimento = tarefa.DataVencimento,
+                TarefaStatus = tarefa.TarefaStatus,
+                Prioridade = tarefa.Prioridade,
+                DataInclusao = DateTime.Now,
+                Comentario = comentario,
+                UsuarioId = usuarioId
+            };
+
+            _context.TarefasHistorico.Add(tarefaHistorico);
+            await _context.SaveChangesAsync();
+        }
     }
 }

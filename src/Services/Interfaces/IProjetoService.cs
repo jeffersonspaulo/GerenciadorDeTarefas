@@ -1,15 +1,16 @@
 ﻿using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Models.Entities;
+using GerenciadorDeTarefas.API.Utils;
 
 namespace GerenciadorDeTarefas.API.Services.Interfaces
 {
     public interface IProjetoService
     {
-        Task<IEnumerable<Projeto>> GetAllAsync();
-        Task<Projeto> GetByIdAsync(int id);
-        Task<IEnumerable<Projeto>> GetByUsuarioAsync(int usuarioId);
-        Task<Projeto> InsertAsync(ProjetoDto projetoDto);
-        Task UpdateAsync(int id, ProjetoDto projetoDto);
-        Task DeleteAsync(int id);
+        Task<Result<IEnumerable<Projeto>>> GetAllAsync();
+        Task<Result<Projeto>> GetByIdAsync(int id);
+        Task<Result<IEnumerable<Projeto>>> GetByUsuarioAsync(int usuarioId);
+        Task<Result<Projeto>> InsertAsync(ProjetoDto projetoDto);
+        Task<Result> UpdateAsync(int id, ProjetoDto projetoDto);
+        Task<Result> DeleteAsync(int id);
     }
 }

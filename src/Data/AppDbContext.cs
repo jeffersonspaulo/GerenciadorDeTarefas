@@ -10,7 +10,8 @@ namespace GerenciadorDeTarefas.API.Data
         }
 
         public DbSet<Projeto> Projetos { get; set; }
-        public DbSet<Tarefa> Tarefas { get; set; } 
+        public DbSet<Tarefa> Tarefas { get; set; }
+        public DbSet<TarefaHistorico> TarefasHistorico { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -20,7 +21,7 @@ namespace GerenciadorDeTarefas.API.Data
                 .HasKey(p => p.Id);
 
             modelBuilder.Entity<Projeto>()
-                .Property(p => p.Nome)
+                .Property(p => p.Titulo)
                 .IsRequired()
                 .HasMaxLength(100);
 
@@ -45,6 +46,25 @@ namespace GerenciadorDeTarefas.API.Data
             modelBuilder.Entity<Tarefa>()
                 .Property(t => t.Descricao)
                 .HasMaxLength(500);
+
+            modelBuilder.Entity<TarefaHistorico>()
+                .HasKey(th => th.Id);
+
+            modelBuilder.Entity<TarefaHistorico>()
+                .Property(th => th.Comentario)
+                .HasMaxLength(1000);
+
+            modelBuilder.Entity<TarefaHistorico>()
+                .HasOne(th => th.Tarefa)
+                .WithMany(t => t.TarefaHistoricos)
+                .HasForeignKey(th => th.TarefaId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<TarefaHistorico>()
+                .HasOne(th => th.Usuario)
+                .WithMany(u => u.TarefaHistoricos)
+                .HasForeignKey(th => th.UsuarioId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

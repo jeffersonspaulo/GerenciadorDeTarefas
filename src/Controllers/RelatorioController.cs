@@ -2,17 +2,16 @@ using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using GerenciadorDeTarefas.API.Utils;
 
 namespace GerenciadorDeTarefas.API.Controllers
 {
     [ApiController]
-    [Route("projeto")]
-    public class ProjetoController : ControllerBase
+    [Route("relatorio")]
+    public class RelatorioController : ControllerBase
     {
         private readonly IProjetoService _projetoService;
 
-        public ProjetoController(IProjetoService projetoService)
+        public RelatorioController(IProjetoService projetoService)
         {
             _projetoService = projetoService;
         }
