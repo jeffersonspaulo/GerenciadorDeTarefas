@@ -22,44 +22,47 @@ namespace GerenciadorDeTarefas.API.Services
             _validationService = validationService;
         }
 
-        public async Task<Result<List<UsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(TarefaStatus status, DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<UsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(TarefaStatus status, DateTime dataInicio, DateTime dataFim)
         {
             try
             {
                 var resultado = await _relatorioRepository.CalcularMediaTarefasConcluidasPeriodoAsync(status, dataInicio, dataFim);
 
-                return Result<List<UsuarioMediaDto>>.Success(resultado);
+                return Result<IEnumerable<UsuarioMediaDto>>.Success(resultado);
             }
             catch (Exception ex)
             {
-                return Result<List<UsuarioMediaDto>>.Failure($"Erro ao calcular a média de tarefas concluídas: {ex.Message}");
+                _logger.LogError(ex, ex.Message);
+                return Result<IEnumerable<UsuarioMediaDto>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
-        public async Task<Result<List<ProjetoQuantidadeDto>>> ObterTarefasConcluidasPorProjetoAsync(int projetoId, DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<ProjetoQuantidadeDto>>> ObterTarefasConcluidasPorProjetoAsync(int projetoId, DateTime dataInicio, DateTime dataFim)
         {
             try
             {
                 var resultado = await _relatorioRepository.ObterTarefasConcluidasPorProjetoAsync(projetoId, dataInicio, dataFim);
 
-                return Result<List<ProjetoQuantidadeDto>>.Success(resultado);
+                return Result<IEnumerable<ProjetoQuantidadeDto>>.Success(resultado);
             }
             catch (Exception ex)
             {
-                return Result<List<ProjetoQuantidadeDto>>.Failure($"Erro ao obter tarefas concluídas por projeto: {ex.Message}");
+                _logger.LogError(ex, ex.Message);
+                return Result<IEnumerable<ProjetoQuantidadeDto>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
-        public async Task<Result<List<Usuario>>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<Usuario>>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             try
             {
                 var resultado = await _relatorioRepository.ObterUsuariosMaisProdutivosPorPeriodoAsync(dataInicio, dataFim);
-                return Result<List<Usuario>>.Success(resultado);
+                return Result<IEnumerable<Usuario>>.Success(resultado);
             }
             catch (Exception ex)
             {
-                return Result<List<Usuario>>.Failure($"Erro ao obter usuários mais produtivos: {ex.Message}");
+                _logger.LogError(ex, ex.Message);
+                return Result<IEnumerable<Usuario>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
@@ -73,21 +76,23 @@ namespace GerenciadorDeTarefas.API.Services
             }
             catch (Exception ex)
             {
-                return Result<double>.Failure($"Erro ao calcular a média de tarefas criadas: {ex.Message}");
+                _logger.LogError(ex, ex.Message);
+                return Result<double>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
-        public async Task<Result<List<Projeto>>> ObterProjetosAtrasadosAsync()
+        public async Task<Result<IEnumerable<Projeto>>> ObterProjetosAtrasadosAsync()
         {
             try
             {
                 var resultado = await _relatorioRepository.ObterProjetosAtrasadosAsync();
 
-                return Result<List<Projeto>>.Success(resultado);
+                return Result<IEnumerable<Projeto>>.Success(resultado);
             }
             catch (Exception ex)
             {
-                return Result<List<Projeto>>.Failure($"Erro ao obter projetos atrasados: {ex.Message}");
+                _logger.LogError(ex, ex.Message);
+                return Result<IEnumerable<Projeto>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
     }
