@@ -2,34 +2,27 @@ version: '3.8'
 
 services:
   gerenciador-de-tarefas-api:
+    image: gerenciador_image
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5000:80" 
+      - "5000:8080"
     depends_on:
       - db
     environment:
       - ConnectionStrings__DefaultConnection=Server=db;Database=GerenciadorDeTarefasDb;User=sa;Password=Str0ngP@ssw0rd!;TrustServerCertificate=True;
       - DOTNET_RUNNING_IN_CONTAINER=true
-    networks:
-      - taskmanager-network
 
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - "1433:1433" 
+      - "1433:1433"
     environment:
       - SA_PASSWORD=Str0ngP@ssw0rd!
       - ACCEPT_EULA=Y
     volumes:
       - sqlserverdata:/var/opt/mssql
-    networks:
-      - taskmanager-network
 
 volumes:
   sqlserverdata:
-
-networks:
-  taskmanager-network:
-    driver: bridge

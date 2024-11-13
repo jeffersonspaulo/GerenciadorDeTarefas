@@ -21,6 +21,5 @@ RUN dotnet publish "src/GerenciadorDeTarefas.API.csproj" -c Release -o /app/publ
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY appsettings.Docker.json .  # Se houver configuração específica para o Docker
 ENV ASPNETCORE_ENVIRONMENT=Docker
 ENTRYPOINT ["dotnet", "GerenciadorDeTarefas.API.dll"]
