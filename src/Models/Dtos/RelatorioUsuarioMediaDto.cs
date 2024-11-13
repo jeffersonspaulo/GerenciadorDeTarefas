@@ -1,8 +1,8 @@
 ﻿namespace GerenciadorDeTarefas.API.Models.Dtos
 {
-    public class UsuarioMediaDto
+    public class RelatorioUsuarioMediaDto
     {
-        public int UsuarioId { get; set; }
+        public string UsuarioId { get; set; }
         public double Media { get; set; }
     }
 }

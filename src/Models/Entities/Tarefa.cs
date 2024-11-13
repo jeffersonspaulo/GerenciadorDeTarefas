@@ -16,6 +16,8 @@ namespace GerenciadorDeTarefas.API.Models.Entities
 
         [JsonIgnore]
         public Projeto Projeto { get; set; }
+
+        [JsonIgnore]
         public List<TarefaHistorico> TarefaHistoricos { get; set; }
     }
 }

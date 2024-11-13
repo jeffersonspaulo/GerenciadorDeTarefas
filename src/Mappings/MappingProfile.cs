@@ -9,10 +9,12 @@ namespace GerenciadorDeTarefas.API.Mappings
         public MappingProfile()
         {
             CreateMap<ProjetoDto, Projeto>()
+              .ForMember(dest => dest.Id, opt => opt.Ignore())
               .ForMember(dest => dest.Titulo, opt => opt.MapFrom(src => src.Titulo))
               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao));
 
             CreateMap<TarefaCreateDto, Tarefa>()
+              .ForMember(dest => dest.Id, opt => opt.Ignore())
               .ForMember(dest => dest.ProjetoId, opt => opt.MapFrom(src => src.ProjetoId))
               .ForMember(dest => dest.Titulo, opt => opt.MapFrom(src => src.Titulo))
               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))
@@ -21,6 +23,7 @@ namespace GerenciadorDeTarefas.API.Mappings
               .ForMember(dest => dest.Prioridade, opt => opt.MapFrom(src => src.Prioridade));
 
             CreateMap<TarefaUpdateDto, Tarefa>()
+              .ForMember(dest => dest.Id, opt => opt.Ignore())
               .ForMember(dest => dest.ProjetoId, opt => opt.MapFrom(src => src.ProjetoId))
               .ForMember(dest => dest.Titulo, opt => opt.MapFrom(src => src.Titulo))
               .ForMember(dest => dest.Descricao, opt => opt.MapFrom(src => src.Descricao))

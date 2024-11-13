@@ -7,10 +7,6 @@ namespace GerenciadorDeTarefas.API.Validators
     {
         public TarefaCreateValidator()
         {
-            RuleFor(x => x.UsuarioId)
-                .GreaterThan(0)
-                .WithMessage("A tarefa precisa ser vinculada a um UsuarioId.");
-
             RuleFor(x => x.ProjetoId)
                 .GreaterThan(0)
                 .WithMessage("A tarefa precisa ser vinculada a um ProjetoId.");

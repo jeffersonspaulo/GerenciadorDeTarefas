@@ -20,7 +20,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task AddHistorico(Tarefa tarefa, int usuarioId, string comentario)
+        public async Task AddHistorico(Tarefa tarefa, string usuarioId, string comentario, string evento)
         {
             var tarefaHistorico = new TarefaHistorico
             {
@@ -31,6 +31,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
                 DataVencimento = tarefa.DataVencimento,
                 TarefaStatus = tarefa.TarefaStatus,
                 Prioridade = tarefa.Prioridade,
+                Evento = evento,
                 DataInclusao = DateTime.Now,
                 Comentario = comentario,
                 UsuarioId = usuarioId

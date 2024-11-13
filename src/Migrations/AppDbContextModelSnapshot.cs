@@ -43,12 +43,11 @@ namespace GerenciadorDeTarefas.API.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
+                    b.Property<string>("UsuarioId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Projetos");
                 });
@@ -116,6 +115,10 @@ namespace GerenciadorDeTarefas.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Evento")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Prioridade")
                         .HasColumnType("int");
 
@@ -132,44 +135,15 @@ namespace GerenciadorDeTarefas.API.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UsuarioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TarefaId");
-
-                    b.HasIndex("UsuarioId");
-
-                    b.ToTable("TarefasHistorico");
-                });
-
-            modelBuilder.Entity("GerenciadorDeTarefas.Models.Entities.Usuario", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
+                    b.Property<string>("UsuarioId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Usuario");
-                });
+                    b.HasIndex("TarefaId");
 
-            modelBuilder.Entity("GerenciadorDeTarefas.API.Models.Entities.Projeto", b =>
-                {
-                    b.HasOne("GerenciadorDeTarefas.Models.Entities.Usuario", "Usuario")
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
+                    b.ToTable("TarefasHistorico");
                 });
 
             modelBuilder.Entity("GerenciadorDeTarefas.API.Models.Entities.Tarefa", b =>
@@ -191,15 +165,7 @@ namespace GerenciadorDeTarefas.API.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("GerenciadorDeTarefas.Models.Entities.Usuario", "Usuario")
-                        .WithMany("TarefaHistoricos")
-                        .HasForeignKey("UsuarioId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.Navigation("Tarefa");
-
-                    b.Navigation("Usuario");
                 });
 
             modelBuilder.Entity("GerenciadorDeTarefas.API.Models.Entities.Projeto", b =>
@@ -208,11 +174,6 @@ namespace GerenciadorDeTarefas.API.Migrations
                 });
 
             modelBuilder.Entity("GerenciadorDeTarefas.API.Models.Entities.Tarefa", b =>
-                {
-                    b.Navigation("TarefaHistoricos");
-                });
-
-            modelBuilder.Entity("GerenciadorDeTarefas.Models.Entities.Usuario", b =>
                 {
                     b.Navigation("TarefaHistoricos");
                 });

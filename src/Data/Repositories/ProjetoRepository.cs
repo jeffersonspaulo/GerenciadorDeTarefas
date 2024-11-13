@@ -13,7 +13,7 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Projeto>> GetByUsuarioAsync(int usuarioId)
+        public async Task<IEnumerable<Projeto>> GetByUsuarioAsync(string usuarioId)
         {
             return await _context.Projetos
                 .Where(item => item.UsuarioId == usuarioId)

@@ -2,11 +2,11 @@ using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using GerenciadorDeTarefas.API.Models.Enums;
-using GerenciadorDeTarefas.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GerenciadorDeTarefas.API.Controllers
 {
+    [Authorize(Roles = "gerente")]
     [ApiController]
     [Route("relatorio")]
     public class RelatorioController : ControllerBase
@@ -19,7 +19,7 @@ namespace GerenciadorDeTarefas.API.Controllers
         }
 
         [HttpGet("media-tarefas-concluidas")]
-        public async Task<ActionResult<IEnumerable<UsuarioMediaDto>>> MediaTarefasConcluidasAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
+        public async Task<ActionResult<IEnumerable<RelatorioUsuarioMediaDto>>> MediaTarefasConcluidasAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
             var resultado = await _relatorioService.CalcularMediaTarefasConcluidasPeriodoAsync(dataInicio, dataFim);
 
@@ -31,8 +31,15 @@ namespace GerenciadorDeTarefas.API.Controllers
         }
 
         [HttpGet("tarefas-concluidas-por-projeto")]
-        public async Task<ActionResult<IEnumerable<ProjetoQuantidadeDto>>> TarefasConcluidasPorProjetoAsync(RelatorioTarefasPorProjetoDto relatorioDto)
+        public async Task<ActionResult<IEnumerable<ProjetoQuantidadeDto>>> TarefasConcluidasPorProjetoAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim, [FromQuery] int projetoId)
         {
+            var relatorioDto = new RelatorioTarefasPorProjetoDto
+            {
+                DataInicio = dataInicio,
+                DataFim = dataFim,
+                ProjetoId = projetoId
+            };
+
             var resultado = await _relatorioService.ObterTarefasConcluidasPorProjetoAsync(relatorioDto);
 
             if (resultado.IsSuccess)
@@ -43,7 +50,7 @@ namespace GerenciadorDeTarefas.API.Controllers
         }
 
         [HttpGet("usuarios-mais-produtivos")]
-        public async Task<ActionResult<IEnumerable<Usuario>>> UsuariosProdutivosPorPeriodoAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
+        public async Task<ActionResult<IEnumerable<RelatorioUsuarioQuantidade>>> UsuariosProdutivosPorPeriodoAsync([FromQuery] DateTime dataInicio, [FromQuery] DateTime dataFim)
         {
             var resultado = await _relatorioService.ObterUsuariosMaisProdutivosPorPeriodoAsync(dataInicio, dataFim);
 

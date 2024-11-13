@@ -1,11 +1,17 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
+using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Utils;
 
 namespace GerenciadorDeTarefas.API.Services
 {
-    public class ValidationService
+    public class ValidationService : IValidationService
     {
+        public ValidationService()
+        {
+
+        }
+
         private readonly IServiceProvider _serviceProvider;
 
         public ValidationService(IServiceProvider serviceProvider)

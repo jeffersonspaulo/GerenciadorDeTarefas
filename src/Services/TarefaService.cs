@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using GerenciadorDeTarefas.API.Controllers;
 using GerenciadorDeTarefas.API.Data.Repositories.Interfaces;
 using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Models.Entities;
@@ -13,9 +12,9 @@ namespace GerenciadorDeTarefas.API.Services
         private readonly ILogger<TarefaService> _logger;
         private readonly ITarefaRepository _tarefaRepository;
         private readonly IMapper _mapper;
-        private readonly ValidationService _validationService;
+        private readonly IValidationService _validationService;
 
-        public TarefaService(ILogger<TarefaService> logger, ITarefaRepository tarefaRepository, IMapper mapper, ValidationService validationService)
+        public TarefaService(ILogger<TarefaService> logger, ITarefaRepository tarefaRepository, IMapper mapper, IValidationService validationService)
         {
             _logger = logger;
             _tarefaRepository = tarefaRepository;
@@ -86,10 +85,15 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result<Tarefa>> InsertAsync(TarefaCreateDto tarefaDto)
+        public async Task<Result<Tarefa>> InsertAsync(string usuarioId, TarefaCreateDto tarefaDto)
         {
             try
             {
+                if (string.IsNullOrEmpty(usuarioId))
+                {
+                    return Result<Tarefa>.Failure("Usuario não foi encontrado.");
+                }
+
                 var resultValidation = _validationService.Validate(tarefaDto);
 
                 if (!resultValidation.IsSuccess)
@@ -109,7 +113,7 @@ namespace GerenciadorDeTarefas.API.Services
 
                 var tarefaCreated = await _tarefaRepository.AddAsync(tarefa);
 
-                await _tarefaRepository.AddHistorico(tarefa, tarefaDto.UsuarioId, tarefaDto.Comentario); 
+                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "InsertAsync"); 
 
                 return Result<Tarefa>.Success(tarefaCreated);
             }
@@ -121,15 +125,13 @@ namespace GerenciadorDeTarefas.API.Services
 
         }
 
-        public async Task<Result> UpdateAsync(int id, TarefaUpdateDto tarefaDto)
+        public async Task<Result> UpdateAsync(int id, string usuarioId, TarefaUpdateDto tarefaDto)
         {
             try
             {
-                var resultValidation = _validationService.Validate(tarefaDto);
-
-                if (!resultValidation.IsSuccess)
+                if (string.IsNullOrEmpty(usuarioId))
                 {
-                    return Result.Failure(resultValidation.ErrorMessage);
+                    Result.Failure($"Usuario não foi encontrado.");
                 }
 
                 var tarefa = await _tarefaRepository.GetByIdAsync(id);
@@ -139,11 +141,11 @@ namespace GerenciadorDeTarefas.API.Services
                     return Result.Failure($"Nenhuma tarefa encontrada com o ID {id}.");
                 }
 
-                tarefa = _mapper.Map<Tarefa>(tarefaDto);
+                _mapper.Map(tarefaDto, tarefa);
 
                 await _tarefaRepository.UpdateAsync(tarefa);
 
-                await _tarefaRepository.AddHistorico(tarefa, tarefaDto.UsuarioId, tarefaDto.Comentario);
+                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "UpdateAsync");
 
                 return Result.Success();
             }
@@ -158,6 +160,13 @@ namespace GerenciadorDeTarefas.API.Services
         {
             try
             {
+                var tarefa = await _tarefaRepository.GetByIdAsync(id);
+
+                if (tarefa == null)
+                {
+                    return Result.Failure($"Nenhuma tarefa encontrada com o ID {id}.");
+                }
+
                 await _tarefaRepository.DeleteAsync(id);
 
                 return Result.Success();

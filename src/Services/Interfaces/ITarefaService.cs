@@ -9,8 +9,8 @@ namespace GerenciadorDeTarefas.API.Services.Interfaces
         Task<Result<IEnumerable<Tarefa>>> GetAllAsync();
         Task<Result<Tarefa>> GetByIdAsync(int id);
         Task<Result<IEnumerable<Tarefa>>> GetByProjetoAsync(int projetoId);
-        Task<Result<Tarefa>> InsertAsync(TarefaCreateDto tarefaDto);
-        Task<Result> UpdateAsync(int id, TarefaUpdateDto tarefaDto);
+        Task<Result<Tarefa>> InsertAsync(string usuarioId, TarefaCreateDto tarefaDto);
+        Task<Result> UpdateAsync(int id, string usuarioId, TarefaUpdateDto tarefaDto);
         Task<Result> DeleteAsync(int id);
     }
 }

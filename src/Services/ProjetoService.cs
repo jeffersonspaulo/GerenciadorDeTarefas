@@ -5,7 +5,10 @@ using AutoMapper;
 using GerenciadorDeTarefas.API.Data.Repositories.Interfaces;
 using GerenciadorDeTarefas.API.Models.Enums;
 using GerenciadorDeTarefas.API.Utils;
-using GerenciadorDeTarefas.API.Data.Repositories;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace GerenciadorDeTarefas.API.Services
 {
@@ -14,9 +17,9 @@ namespace GerenciadorDeTarefas.API.Services
         private readonly ILogger<ProjetoService> _logger;
         private readonly IProjetoRepository _projetoRepository;
         private readonly IMapper _mapper;
-        private readonly ValidationService _validationService;
+        private readonly IValidationService _validationService;
 
-        public ProjetoService(ILogger<ProjetoService> logger, IProjetoRepository projetoRepository, IMapper mapper, ValidationService validationService)
+        public ProjetoService(ILogger<ProjetoService> logger, IProjetoRepository projetoRepository, IMapper mapper, IValidationService validationService)
         {
             _logger = logger;
             _projetoRepository = projetoRepository;
@@ -48,9 +51,9 @@ namespace GerenciadorDeTarefas.API.Services
         {
             try
             {
-                var projeto = await _projetoRepository.GetByIdAsync(id);
+                var projeto = await _projetoRepository.GetByIdWithIncludesAsync(id, i => i.Tarefas);
 
-                if (projeto == null)
+                if (projeto == null || projeto.Id == 0)
                 {
                     return Result<Projeto>.Failure($"Nenhum projeto encontrado com o ID {id}.");
                 }
@@ -64,7 +67,7 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result<IEnumerable<Projeto>>> GetByUsuarioAsync(int usuarioId)
+        public async Task<Result<IEnumerable<Projeto>>> GetByUsuarioAsync(string usuarioId)
         {
             try {
                 var projetos = await _projetoRepository.GetByUsuarioAsync(usuarioId);
@@ -83,14 +86,20 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result<Projeto>> InsertAsync(ProjetoDto projetoDto)
+        public async Task<Result<Projeto>> InsertAsync(string usuarioId, ProjetoDto projetoDto)
         {
             try
             {
                 _validationService.Validate(projetoDto);
 
+                if (string.IsNullOrEmpty(usuarioId))
+                {
+                    Result.Failure($"Usuario não foi encontrado.");
+                }
+
                 var projeto = _mapper.Map<Projeto>(projetoDto);
                 projeto.DataCriacao = DateTime.Now;
+                projeto.UsuarioId = usuarioId;
 
                 var projetoCreated = await _projetoRepository.AddAsync(projeto);
 
@@ -103,7 +112,7 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result> UpdateAsync(int id, ProjetoDto projetoDto)
+        public async Task<Result> UpdateAsync(int id, string usuarioId, ProjetoDto projetoDto)
         {
             try
             {
@@ -113,10 +122,17 @@ namespace GerenciadorDeTarefas.API.Services
 
                 if (projeto == null)
                 {
-                    throw new Exception($"Nenhum projeto encontrado com o ID {id}.");
+                    Result.Failure($"Nenhum projeto encontrado com o ID {id}.");
                 }
 
-                projeto = _mapper.Map<Projeto>(projetoDto);
+                if (string.IsNullOrEmpty(usuarioId))
+                {
+                    Result.Failure($"Usuario não foi encontrado.");
+                }
+
+                _mapper.Map(projetoDto, projeto);
+
+                projeto.UsuarioId = usuarioId;
 
                 await _projetoRepository.UpdateAsync(projeto);
 

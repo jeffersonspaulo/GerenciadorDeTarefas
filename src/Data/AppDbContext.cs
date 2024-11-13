@@ -59,12 +59,6 @@ namespace GerenciadorDeTarefas.API.Data
                 .WithMany(t => t.TarefaHistoricos)
                 .HasForeignKey(th => th.TarefaId)
                 .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder.Entity<TarefaHistorico>()
-                .HasOne(th => th.Usuario)
-                .WithMany(u => u.TarefaHistoricos)
-                .HasForeignKey(th => th.UsuarioId)
-                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

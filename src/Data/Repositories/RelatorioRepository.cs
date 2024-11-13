@@ -2,7 +2,6 @@
 using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Models.Entities;
 using GerenciadorDeTarefas.API.Models.Enums;
-using GerenciadorDeTarefas.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace GerenciadorDeTarefas.API.Data.Repositories
@@ -16,30 +15,34 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<UsuarioMediaDto>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<RelatorioUsuarioMediaDto>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
-            var tarefasComHistorico = await _context.Tarefas
-                .Where(t => t.TarefaHistoricos.Any(h => h.TarefaStatus == TarefaStatus.Concluida &&
-                                                         h.DataInclusao >= dataInicio && h.DataInclusao <= dataFim))
-                .Select(t => new
+            if (dataFim == DateTime.MinValue) 
+                dataFim = DateTime.Now;
+
+            var tarefasComHistorico = await _context.TarefasHistorico
+                .Where(h =>
+                    h.TarefaStatus == TarefaStatus.Concluida &&
+                    (h.DataInclusao >= dataInicio) &&
+                    (h.DataInclusao <= dataFim)
+                )
+                .GroupBy(h => h.TarefaId)
+                .Select(g => new
                 {
-                    Tarefa = t,
-                    HistoricoConclusao = t.TarefaHistoricos
-                        .Where(h => h.TarefaStatus == TarefaStatus.Concluida &&
-                                    h.DataInclusao >= dataInicio && h.DataInclusao <= dataFim)
+                    TarefaId = g.Key,
+                    HistoricoConclusao = g
                         .OrderBy(h => h.DataInclusao)
-                        .FirstOrDefault()
+                        .FirstOrDefault() 
                 })
                 .ToListAsync();
-
 
             var mediasPorUsuario = tarefasComHistorico
                 .Where(t => t.HistoricoConclusao != null)
                 .GroupBy(t => t.HistoricoConclusao.UsuarioId)
-                .Select(g => new UsuarioMediaDto
+                .Select(g => new RelatorioUsuarioMediaDto
                 {
                     UsuarioId = g.Key,
-                    Media = g.Count() / (double)g.Count() 
+                    Media = g.Count()
                 })
                 .ToList();
 
@@ -63,23 +66,28 @@ namespace GerenciadorDeTarefas.API.Data.Repositories
             return resultados;
         }
 
-        public async Task<IEnumerable<Usuario>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<IEnumerable<RelatorioUsuarioQuantidade>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             return await _context.TarefasHistorico
                 .Where(h => h.TarefaStatus == TarefaStatus.Concluida &&
                             h.DataInclusao >= dataInicio && h.DataInclusao <= dataFim)
                 .GroupBy(h => h.UsuarioId)
                 .OrderByDescending(g => g.Count())
-                .Select(g => g.First().Usuario)
+                .Select(g => new RelatorioUsuarioQuantidade
+                {
+                    UsuarioId = g.Key,
+                    QuantidadeTarefasConcluidas = g.Count()
+                })
                 .ToListAsync();
         }
 
         public async Task<double> CalcularMediaTarefasCriadasPorDiaAsync()
         {
             var totalTarefas = await _context.Tarefas.CountAsync();
-            var diasTotais = (DateTime.Now - await _context.Tarefas.MinAsync(t => t.DataCriacao)).TotalDays;
+            var dataMaisAntiga = await _context.Tarefas.MinAsync(t => t.DataCriacao);
+            var diasTotais = (DateTime.Now - dataMaisAntiga).TotalDays;
 
-            if (diasTotais == 0) return 0;
+            if (diasTotais <= 0) return 0;
 
             return totalTarefas / diasTotais;
         }

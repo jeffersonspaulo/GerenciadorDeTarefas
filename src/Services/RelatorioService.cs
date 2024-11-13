@@ -3,35 +3,34 @@ using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Models.Entities;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Utils;
-using GerenciadorDeTarefas.Models.Entities;
 
 namespace GerenciadorDeTarefas.API.Services
 {
     public class RelatorioService : IRelatorioService
     {
-        private readonly ILogger<TarefaService> _logger;
+        private readonly ILogger<RelatorioService> _logger;
         private readonly IRelatorioRepository _relatorioRepository;
-        private readonly ValidationService _validationService;
+        private readonly IValidationService _validationService;
 
-        public RelatorioService(ILogger<TarefaService> logger, IRelatorioRepository relatorioRepository, ValidationService validationService)
+        public RelatorioService(ILogger<RelatorioService> logger, IRelatorioRepository relatorioRepository, IValidationService validationService)
         {
             _logger = logger;
             _relatorioRepository = relatorioRepository;
             _validationService = validationService;
         }
 
-        public async Task<Result<IEnumerable<UsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<RelatorioUsuarioMediaDto>>> CalcularMediaTarefasConcluidasPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             try
             {
                 var resultado = await _relatorioRepository.CalcularMediaTarefasConcluidasPeriodoAsync(dataInicio, dataFim);
 
-                return Result<IEnumerable<UsuarioMediaDto>>.Success(resultado);
+                return Result<IEnumerable<RelatorioUsuarioMediaDto>>.Success(resultado);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<IEnumerable<UsuarioMediaDto>>.Failure("Ocorreu um erro durante a requisição.");
+                return Result<IEnumerable<RelatorioUsuarioMediaDto>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
@@ -50,17 +49,17 @@ namespace GerenciadorDeTarefas.API.Services
             }
         }
 
-        public async Task<Result<IEnumerable<Usuario>>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
+        public async Task<Result<IEnumerable<RelatorioUsuarioQuantidade>>> ObterUsuariosMaisProdutivosPorPeriodoAsync(DateTime dataInicio, DateTime dataFim)
         {
             try
             {
                 var resultado = await _relatorioRepository.ObterUsuariosMaisProdutivosPorPeriodoAsync(dataInicio, dataFim);
-                return Result<IEnumerable<Usuario>>.Success(resultado);
+                return Result<IEnumerable<RelatorioUsuarioQuantidade>>.Success(resultado);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<IEnumerable<Usuario>>.Failure("Ocorreu um erro durante a requisição.");
+                return Result<IEnumerable<RelatorioUsuarioQuantidade>>.Failure("Ocorreu um erro durante a requisição.");
             }
         }
 
