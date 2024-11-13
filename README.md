@@ -56,3 +56,7 @@ docker-compose up
 - Adicionar novos endpoints necessários, visando tornar a API mais flexível e adaptável a futuras necessidades.
 
 - Focar em otimização de performance e monitoramento, garantindo que a API seja eficiente, escalável e facilmente monitorada em produção.
+
+- Documentar detalhadamente todos os endpoints, especificando com clareza os dados que cada um recebe e os resultados que retornam.
+
+
