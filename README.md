@@ -17,6 +17,13 @@
 ### Banco de dados: 
 - SQL Server
 
+### Padrão do Token JWT para Usuários de Teste
+- Para realizar requisições autenticadas durante os testes, utilize tokens JWT (JSON Web Tokens) configurados com os claims esperados pela aplicação. 
+A aplicação espera que os tokens JWT contenham os seguintes claims:
+
+- Identificador único do usuário (`ClaimTypes.NameIdentifier`)
+- Função do usuário na aplicação (`ClaimTypes.Role`), como `gerente` ou `colaborador`
+
 ---
 
 ### Para executar o projeto no Docker, basta rodar o seguinte comando na pasta raiz da solução:
