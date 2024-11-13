@@ -18,7 +18,7 @@
 - SQL Server
 
 ### Padrão do Token JWT para Usuários de Teste
-- Para realizar requisições autenticadas durante os testes, utilize tokens JWT (JSON Web Tokens) configurados com os claims esperados pela aplicação. 
+Para realizar requisições autenticadas durante os testes, utilize tokens JWT (JSON Web Tokens) configurados com os claims esperados pela aplicação. 
 A aplicação espera que os tokens JWT contenham os seguintes claims:
 
 - Identificador único do usuário (`ClaimTypes.NameIdentifier`)
