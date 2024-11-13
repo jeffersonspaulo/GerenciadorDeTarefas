@@ -1,22 +1,25 @@
 # GerenciadorDeTarefas - API construída para gerenciar suas tarefas diárias
 
-## Desenvolvimento: 
-- Projeto feito em .NET 8
+# Fase 1: Desenvolvimento
 
-## Arquitetura: 
+### Desenvolvimento: 
+- Projeto desenvolvido em .NET 8
+
+### Arquitetura: 
 - Clean Architecture
 
-## Componentes:
+### Componentes:
 - FluentValidation: validação de dados e tratamento de exceções
 - Automapper: mapeamento automático entre entidades e DTOs
 - Entity Framework Core com Migrations: facilitar a persistência e controle de versões do banco de dados
 - xUnit: realização dos testes unitários
 
-## Banco de dados: 
+### Banco de dados: 
 - SQL Server
 
+---
 
-### Para realizar a execução do projeto no Docker, é necessário executar o seguinte comando na pasta raiz da Solution:
+### Para executar o projeto no Docker, basta rodar o seguinte comando na pasta raiz da solução:
 
 ```
 docker-compose up
