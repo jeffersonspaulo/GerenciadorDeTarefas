@@ -113,7 +113,7 @@ namespace GerenciadorDeTarefas.API.Services
 
                 var tarefaCreated = await _tarefaRepository.AddAsync(tarefa);
 
-                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "InsertAsync"); 
+                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "Criação"); 
 
                 return Result<Tarefa>.Success(tarefaCreated);
             }
@@ -145,7 +145,7 @@ namespace GerenciadorDeTarefas.API.Services
 
                 await _tarefaRepository.UpdateAsync(tarefa);
 
-                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "UpdateAsync");
+                await _tarefaRepository.AddHistorico(tarefa, usuarioId, tarefaDto.Comentario, "Atualização");
 
                 return Result.Success();
             }

@@ -27,7 +27,6 @@ namespace GerenciadorDeTarefas.API.Configurations
             services.AddValidatorsFromAssemblyContaining<TarefaUpdateValidator>();
 
             services.AddScoped<ValidationService>();
-            services.AddScoped<TokenService>();
 
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));

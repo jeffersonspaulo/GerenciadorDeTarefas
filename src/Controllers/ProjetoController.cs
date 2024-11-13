@@ -2,8 +2,6 @@ using GerenciadorDeTarefas.API.Models.Dtos;
 using GerenciadorDeTarefas.API.Services.Interfaces;
 using GerenciadorDeTarefas.API.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.IdentityModel.Tokens.Jwt;
-using GerenciadorDeTarefas.API.Services;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 
@@ -14,12 +12,10 @@ namespace GerenciadorDeTarefas.API.Controllers
     public class ProjetoController : ControllerBase
     {
         private readonly IProjetoService _projetoService;
-        private readonly TokenService _tokenService;
 
-        public ProjetoController(IProjetoService projetoService, TokenService tokenService)
+        public ProjetoController(IProjetoService projetoService)
         {
             _projetoService = projetoService;
-            _tokenService = tokenService;
         }
 
         [HttpGet]
